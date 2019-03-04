@@ -3,6 +3,7 @@ var keys = require("./keys.js");
 var axios = require("axios");
 var Spotify = require('node-spotify-api');
 var moment = require('moment');
+var fs = require('fs');
 
 // Store all of the arguments in an array
 var term = process.argv[2];
@@ -41,7 +42,6 @@ if (term === "movie-this") {
   if (nodeArgs == "") {
     nodeArgs = "tubthumping";
 }
-   
   spotify.search({ type: 'track', query: nodeArgs, limit: 1 }, function(err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
@@ -51,6 +51,7 @@ if (term === "movie-this") {
   console.log("Song URL: " + data.tracks.items[0].preview_url) 
   console.log("Album: " + data.tracks.items[0].album.name) 
   });
+
 } else if (term === "concert-this") {
 
   if (nodeArgs == "") {
@@ -67,7 +68,25 @@ if (term === "movie-this") {
     });
 } else if (term === "do-what-it-says") {
 
-  
+  function doWhatItSays() {
+    var dataBuffer = fs.readFileSync('random.txt')
+    var dataJSON = dataBuffer.toString()
+    var dataArr = dataJSON.split(',')
+    term = dataArr[0]
+    nodeArgs = dataArr[1]
+    console.log(term)
+    console.log(nodeArgs)
 
+    spotify.search({ type: 'track', query: nodeArgs, limit: 1 }, function(err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    }
+    console.log("Artist: " + data.tracks.items[0].album.artists[0].name) 
+    console.log("Song : " + data.tracks.items[0].name) 
+    console.log("Song URL: " + data.tracks.items[0].preview_url) 
+    console.log("Album: " + data.tracks.items[0].album.name) 
+    });
+  }
+  doWhatItSays()
 }
 
