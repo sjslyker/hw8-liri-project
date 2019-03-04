@@ -2,7 +2,7 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var axios = require("axios");
 var Spotify = require('node-spotify-api');
-// var moment = require('')
+var moment = require('moment');
 
 // Store all of the arguments in an array
 var term = process.argv[2];
@@ -13,7 +13,7 @@ var spotify = new Spotify({
   secret: keys.spotify.secret
 });
 
-if (term === "movie") {
+if (term === "movie-this") {
   if (nodeArgs == "") {
     nodeArgs = "Shrek";
 }
@@ -35,7 +35,7 @@ if (term === "movie") {
           console.log("Movie Actors: " + response.data.Actors);
       }
     );
-} else if (term === "song") {
+} else if (term === "spotify-this-song") {
   var Spotify = require('node-spotify-api');
 
   if (nodeArgs == "") {
@@ -51,12 +51,23 @@ if (term === "movie") {
   console.log("Song URL: " + data.tracks.items[0].preview_url) 
   console.log("Album: " + data.tracks.items[0].album.name) 
   });
-} else if (term === "band") {
-  var queryUrlBands = "http://www.omdbapi.com/?t=" + nodeArgs + "&y=&plot=short&apikey=trilogy";
+} else if (term === "concert-this") {
+
+  if (nodeArgs == "") {
+    nodeArgs = "Kid+Cudi";
+}
+
+  var queryUrlBands = "https://rest.bandsintown.com/artists/" + nodeArgs + "/events?app_id=codingbootcamp"
 
   axios.get(queryUrlBands).then(
     function(response) {
-      console.log(response)
-    }
-  );
+      console.log(response.data[0].venue.name)
+      console.log(response.data[0].venue.city)
+      console.log(moment(response.data[0].datetime).format("MM/DD/YYYY"));
+    });
+} else if (term === "do-what-it-says") {
+
+  
+
 }
+
